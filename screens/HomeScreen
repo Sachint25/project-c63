@@ -1,0 +1,184 @@
+import * as React from 'react';
+import { Text, View, StyleSheet, TextInput ,TouchableOpacity ,Image ,Alert} from 'react-native';
+import {Header} from 'react-native-elements'; 
+
+
+console.log(db["the"].chunks)
+export default class App extends React.Component {
+  getWord = (word)=>{
+      var searchkeyword=word.toLowerCase()
+      var uri = "https://rupinwhitehatjr.github.io/dictionary/"+searchKeyword+".json"
+      return fetch(uri)
+      .then((data))=>{
+          if(data.status===200){
+              return data.json()
+          }else{
+              return null
+          }
+      }}
+      .then((response))=>{
+          var responseObject = response
+
+          if(responseObject){
+              var wordData = responseObject.defination[0]
+              var definition = wordData.description
+              var LexicalCategory = wordData.wordType
+
+              this.setState({
+                  "word":this.state.text,
+                  "defination":defination,
+                  "LexicalCategory":LexicalCategory
+              })
+          }else{
+              this.setState({
+                  "word":this.state.text,
+                  "defination":"Not Found",
+              })
+          }
+      }
+
+  constructor(){
+    super();
+    this.state = {
+      text: '',
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+
+        <TextInput
+          style = {styles.input}
+
+          onChangeText = {(text) => {
+            this.setState({
+              text:text,
+              isSearchPressed:false,
+              word:"loading",
+              LexicalCategory:"",
+              examples:[],
+              defination:""
+              
+            })
+          }}
+          value = {this.state.text}
+        />
+
+        <TouchableOpacity onPress={()=> {
+            this.setState(( isSearchPressed:true));
+            this.getWord(this.state.text)
+        }}
+        
+        style = {styles.goButton}> 
+          <Text style = {styles.buttonText}>
+            go
+          </Text>
+        </TouchableOpacity>
+
+        <Text>
+            this.state.text
+        </Text>
+
+        <View style = {styles.detailsContainer}>
+            <Text style = {styles.detailsTitle}>
+                Word:{"}
+            </Text>
+            
+            <Text style = {{fontSize:18}}>
+                {this.state.word}
+            </Text>
+            
+        </View>
+
+
+        <View style = {{flexDirection:"row",flexWrap:"wrap"}}>
+            <Text style = {styles.detailsTitle}>
+                Defination:{"}
+            </Text>
+            
+            <Text style = {{fontSize:18}}>
+                {this.state.defination}
+            </Text>
+            
+        </View>
+
+
+        <View style = {styles.detailsContainer}>
+            <Text style = {styles.detailsTitle}>
+                Type:{"}
+            </Text>
+            
+            <Text style = {{fontSize:18}}>
+                {this.state.LexicalCategory}
+            </Text>
+            
+        </View>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+ container: {
+    flex: 1,
+    backgroundColor: '#b8b8b8',
+  },
+
+  input:{
+    marginTop:50,
+    width:'80%',
+    alignSelf:"center",
+    height:40,
+    textAlign:"center",
+    borderWidth:3
+  },
+
+  goButton:{
+    width:"50%",
+    height:50,
+    alignSelf:"center",
+    padding:10,
+    margin:10,
+    backgroundColor:"white",
+    borderWidth:2,
+    justifyContent:"center",
+    alignItems:"center"
+  },
+
+  buttonText:{
+    textAlign:"center",
+    fontSize:30,
+    fontWeight:"bold",
+
+  },
+
+  
+
+  imageIcon:{
+    width:150,
+    height:150,
+    marginLeft:85
+  },
+
+  
+});
+
+
+const styles = StyleSheet.create({
+    container:{
+        flex:1,
+    },
+
+    inputBoxContainer:{
+        flex:0.3,
+        alignItems:"center",
+        justifyContent:"center"
+    },
+    inputBox:{
+        width:"60%",
+        alignSelf:"center",
+        height:40
+    },
+
+})
